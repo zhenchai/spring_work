@@ -20,16 +20,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by zhenchai on 2018/7/15 .
  * Description:
  */
-public class DefaultBeanFactory implements BeanFactory {
-
-    public static final String ID_ATTRIBUTE = "id";
-
-    public static final String CLASS_ATTRIBUTE = "class";
+public class DefaultBeanFactory implements BeanFactory, BeanDefinitionRegistry {
 
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(64);
 
-    public DefaultBeanFactory(String configFilePath) {
-        loadBeanDefinition(configFilePath);
+    public DefaultBeanFactory() {
     }
 
     @Override
@@ -53,35 +48,9 @@ public class DefaultBeanFactory implements BeanFactory {
         return this.beanDefinitionMap.get(beanId);
     }
 
-
-    private void loadBeanDefinition(String configFilePath) {
-        InputStream is = null;
-        try {
-            ClassLoader cl = ClassUtils.getDefaultClassLoader();
-            is = cl.getResourceAsStream(configFilePath);
-
-            SAXReader reader = new SAXReader();
-            Document doc = reader.read(is);
-
-            Element root = doc.getRootElement(); //<beans>
-            Iterator<Element> iter = root.elementIterator();
-            while (iter.hasNext()) {
-                Element ele = (Element) iter.next();
-                String id = ele.attributeValue(ID_ATTRIBUTE);
-                String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);
-                BeanDefinition bd = new GenericBeanDefinition(id, beanClassName);
-                this.beanDefinitionMap.put(id, bd);
-            }
-        } catch (DocumentException e) {
-            throw new BeanDefinitionStoreException("IOException parsing XML document from " + configFilePath, e);
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+    @Override
+    public void registerBeanDefinition(String beanID, BeanDefinition bd) {
+        this.beanDefinitionMap.put(beanID, bd);
     }
+
 }
