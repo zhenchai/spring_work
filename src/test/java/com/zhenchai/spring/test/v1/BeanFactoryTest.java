@@ -9,6 +9,7 @@ import com.zhenchai.spring.beans.factory.BeanDefinitionStoreException;
 import com.zhenchai.spring.beans.factory.BeanFactory;
 import com.zhenchai.spring.beans.factory.support.DefaultBeanFactory;
 import com.zhenchai.spring.beans.factory.xml.XmlBeanDefinitionReader;
+import com.zhenchai.spring.core.io.ClassPathResource;
 import com.zhenchai.spring.service.v1.PetStoreService;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,7 +32,7 @@ public class BeanFactoryTest {
 
     @Test
     public void testGetBean() {
-        reader.loadBeanDefinitions("petstore-v1.xml");
+        reader.loadBeanDefinitions(new ClassPathResource("petstore-v1.xml"));
 
         BeanDefinition bd = factory.getBeanDefinition("petStore");
 
@@ -45,7 +46,7 @@ public class BeanFactoryTest {
     @Test
     public void testInvalidBean() {
 
-        reader.loadBeanDefinitions("petstore-v1.xml");
+        reader.loadBeanDefinitions(new ClassPathResource("petstore-v1.xml"));
         try {
             factory.getBean("invalidBean");
         } catch (BeanCreationException e) {
@@ -57,7 +58,7 @@ public class BeanFactoryTest {
     @Test
     public void testInvalidXML() {
         try {
-            reader.loadBeanDefinitions("xxx.xml");
+            reader.loadBeanDefinitions(new ClassPathResource("xxx.xml"));
         } catch (BeanDefinitionStoreException e) {
             return;
         }

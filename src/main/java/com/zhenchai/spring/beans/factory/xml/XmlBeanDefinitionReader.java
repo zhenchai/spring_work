@@ -4,9 +4,8 @@ import com.zhenchai.spring.beans.BeanDefinition;
 import com.zhenchai.spring.beans.factory.BeanDefinitionStoreException;
 import com.zhenchai.spring.beans.factory.support.BeanDefinitionRegistry;
 import com.zhenchai.spring.beans.factory.support.GenericBeanDefinition;
-import com.zhenchai.spring.util.ClassUtils;
+import com.zhenchai.spring.core.io.Resource;
 import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 
@@ -29,11 +28,11 @@ public class XmlBeanDefinitionReader {
     public XmlBeanDefinitionReader(BeanDefinitionRegistry registry){
         this.registry = registry;
     }
-    public void loadBeanDefinitions(String configFile){
+
+    public void loadBeanDefinitions(Resource resource){
         InputStream is = null;
         try{
-            ClassLoader cl = ClassUtils.getDefaultClassLoader();
-            is = cl.getResourceAsStream(configFile);
+            is = resource.getInputStream();
             SAXReader reader = new SAXReader();
             Document doc = reader.read(is);
 
@@ -46,8 +45,8 @@ public class XmlBeanDefinitionReader {
                 BeanDefinition bd = new GenericBeanDefinition(id,beanClassName);
                 this.registry.registerBeanDefinition(id, bd);
             }
-        } catch (DocumentException e) {
-            throw new BeanDefinitionStoreException("IOException parsing XML document from " + configFile,e);
+        } catch (Exception e) {
+            throw new BeanDefinitionStoreException("IOException parsing XML document from " + resource.getDescription(),e);
         }finally{
             if(is != null){
                 try {
