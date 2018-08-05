@@ -1,6 +1,6 @@
 package com.zhenchai.spring.context;
 
-import com.zhenchai.spring.beans.factory.ConfigurableBeanFactory;
+import com.zhenchai.spring.beans.factory.config.ConfigurableBeanFactory;
 
 /**
  * Created by zhenchai on 2018/8/4 .

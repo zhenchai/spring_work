@@ -1,8 +1,5 @@
 package com.zhenchai.spring.test.v1;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
 import com.zhenchai.spring.beans.BeanDefinition;
 import com.zhenchai.spring.beans.factory.BeanCreationException;
 import com.zhenchai.spring.beans.factory.BeanDefinitionStoreException;
@@ -14,6 +11,8 @@ import com.zhenchai.spring.service.v1.PetStoreService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by zhenchai on 2018/7/15 .
@@ -36,11 +35,22 @@ public class BeanFactoryTest {
 
         BeanDefinition bd = factory.getBeanDefinition("petStore");
 
+        assertTrue(bd.isSingleton());
+
+        assertFalse(bd.isPrototype());
+
+        assertEquals(BeanDefinition.SCOPE_DEFAULT, bd.getScope());
+
+
         assertEquals("com.zhenchai.spring.service.v1.PetStoreService", bd.getBeanClassName());
 
         PetStoreService petStore = (PetStoreService) factory.getBean("petStore");
 
         assertNotNull(petStore);
+
+        PetStoreService petStore1 = (PetStoreService)factory.getBean("petStore");
+
+        assertTrue(petStore.equals(petStore1));
     }
 
     @Test

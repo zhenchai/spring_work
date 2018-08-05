@@ -2,18 +2,9 @@ package com.zhenchai.spring.beans.factory.support;
 
 import com.zhenchai.spring.beans.BeanDefinition;
 import com.zhenchai.spring.beans.factory.BeanCreationException;
-import com.zhenchai.spring.beans.factory.BeanDefinitionStoreException;
-import com.zhenchai.spring.beans.factory.BeanFactory;
-import com.zhenchai.spring.beans.factory.ConfigurableBeanFactory;
+import com.zhenchai.spring.beans.factory.config.ConfigurableBeanFactory;
 import com.zhenchai.spring.util.ClassUtils;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -21,7 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by zhenchai on 2018/7/15 .
  * Description:
  */
-public class DefaultBeanFactory implements ConfigurableBeanFactory, BeanDefinitionRegistry {
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
+        implements ConfigurableBeanFactory, BeanDefinitionRegistry {
 
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(64);
 
@@ -36,6 +28,19 @@ public class DefaultBeanFactory implements ConfigurableBeanFactory, BeanDefiniti
         if (bd == null) {
             throw new BeanCreationException("Bean Definition does not exist");
         }
+        if (bd.isSingleton()) {
+            Object bean = this.getSingleton(beanId);
+            if (bean == null) {
+                bean = createBean(bd);
+                this.registerSingleton(beanId, bean);
+            }
+            return bean;
+        }
+        //非singleton
+        return createBean(bd);
+    }
+
+    private Object createBean(BeanDefinition bd) {
         ClassLoader cl = this.getBeanClassLoader();
         String beanClassName = bd.getBeanClassName();
         try {
@@ -45,6 +50,7 @@ public class DefaultBeanFactory implements ConfigurableBeanFactory, BeanDefiniti
             throw new BeanCreationException("create bean for "+ beanClassName +" failed", e);
         }
     }
+
 
     @Override
     public BeanDefinition getBeanDefinition(String beanId) {
