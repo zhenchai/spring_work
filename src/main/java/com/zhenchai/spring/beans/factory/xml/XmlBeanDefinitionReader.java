@@ -82,7 +82,7 @@ public class XmlBeanDefinitionReader {
 
 
     public void parsePropertyElement(Element beanElem, BeanDefinition bd) {
-        Iterator iter= beanElem.elementIterator(PROPERTY_ELEMENT);
+        Iterator iter = beanElem.elementIterator(PROPERTY_ELEMENT);
         while(iter.hasNext()){
             Element propElem = (Element)iter.next();
             String propertyName = propElem.attributeValue(NAME_ATTRIBUTE);
