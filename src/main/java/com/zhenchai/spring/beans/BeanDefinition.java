@@ -1,5 +1,7 @@
 package com.zhenchai.spring.beans;
 
+import java.util.List;
+
 /**
  * Created by zhenchai on 2018/7/15 .
  * Description:
@@ -17,4 +19,6 @@ public interface BeanDefinition {
     void setScope(String scope);
 
     String getBeanClassName();
+
+    List<PropertyValue> getPropertyValues();
 }
