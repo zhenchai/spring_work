@@ -29,5 +29,7 @@ public class ApplicationContextTestV2 {
         assertTrue(petStoreService.getItemDao() instanceof ItemDao);
 
         assertEquals("liuxin", petStoreService.getOwner());
+
+        assertEquals(2, petStoreService.getVersion());
     }
 }

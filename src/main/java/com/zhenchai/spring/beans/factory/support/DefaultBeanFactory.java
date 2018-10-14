@@ -2,6 +2,7 @@ package com.zhenchai.spring.beans.factory.support;
 
 import com.zhenchai.spring.beans.BeanDefinition;
 import com.zhenchai.spring.beans.PropertyValue;
+import com.zhenchai.spring.beans.SimpleTypeConverter;
 import com.zhenchai.spring.beans.factory.BeanCreationException;
 import com.zhenchai.spring.beans.factory.config.ConfigurableBeanFactory;
 import com.zhenchai.spring.util.ClassUtils;
@@ -78,6 +79,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         }
 
         BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
+        SimpleTypeConverter converter = new SimpleTypeConverter();
         try{
             for (PropertyValue pv : pvs){
                 String propertyName = pv.getName();
@@ -89,7 +91,9 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
                 PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
                 for (PropertyDescriptor pd : pds) {
                     if(pd.getName().equals(propertyName)){
-                        pd.getWriteMethod().invoke(bean, resolvedValue);
+                        Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
+
+                        pd.getWriteMethod().invoke(bean, convertedValue);
                         break;
                     }
                 }
