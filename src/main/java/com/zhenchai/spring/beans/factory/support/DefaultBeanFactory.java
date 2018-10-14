@@ -81,14 +81,16 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
         SimpleTypeConverter converter = new SimpleTypeConverter();
         try{
+            //反射调用class set方法，注入属性对象
+            BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+            PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+
             for (PropertyValue pv : pvs){
                 String propertyName = pv.getName();
                 Object originalValue = pv.getValue();
                 Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
 
                 //反射调用class set方法，注入属性对象
-                BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-                PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
                 for (PropertyDescriptor pd : pds) {
                     if(pd.getName().equals(propertyName)){
                         Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
