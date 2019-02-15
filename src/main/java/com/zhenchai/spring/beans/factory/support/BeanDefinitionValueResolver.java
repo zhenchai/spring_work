@@ -1,5 +1,6 @@
 package com.zhenchai.spring.beans.factory.support;
 
+import com.zhenchai.spring.beans.factory.BeanFactory;
 import com.zhenchai.spring.beans.factory.config.RuntimeBeanReference;
 import com.zhenchai.spring.beans.factory.config.TypedStringValue;
 
@@ -11,9 +12,9 @@ import java.lang.reflect.Type;
  */
 public class BeanDefinitionValueResolver {
 
-    private final DefaultBeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
-    public BeanDefinitionValueResolver(DefaultBeanFactory beanFactory) {
+    public BeanDefinitionValueResolver(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
