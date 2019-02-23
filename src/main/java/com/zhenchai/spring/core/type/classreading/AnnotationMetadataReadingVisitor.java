@@ -1,6 +1,7 @@
 package com.zhenchai.spring.core.type.classreading;
 
 import com.zhenchai.spring.core.annotation.AnnotationAttributes;
+import com.zhenchai.spring.core.type.AnnotationMetadata;
 import org.springframework.asm.AnnotationVisitor;
 import org.springframework.asm.Type;
 
@@ -13,7 +14,7 @@ import java.util.Set;
  * Created by zhenchai on 2019/2/17 .
  * Description:
  */
-public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor {
+public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor implements AnnotationMetadata {
 
     private final Set<String> annotationSet = new LinkedHashSet<String>(4);
     private final Map<String, AnnotationAttributes> attributeMap = new LinkedHashMap<String, AnnotationAttributes>(4);

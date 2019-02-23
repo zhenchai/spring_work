@@ -1,5 +1,6 @@
 package com.zhenchai.spring.core.type.classreading;
 
+import com.zhenchai.spring.core.type.ClassMetadata;
 import com.zhenchai.spring.util.ClassUtils;
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.Opcodes;
@@ -9,7 +10,7 @@ import org.springframework.asm.SpringAsmInfo;
  * Created by zhenchai on 2019/2/17 .
  * Description:
  */
-public class ClassMetadataReadingVisitor extends ClassVisitor {
+public class ClassMetadataReadingVisitor extends ClassVisitor implements ClassMetadata {
     private String className;
 
     private boolean isInterface;
