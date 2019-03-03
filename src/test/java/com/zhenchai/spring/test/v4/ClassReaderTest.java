@@ -3,9 +3,11 @@ package com.zhenchai.spring.test.v4;
 import com.zhenchai.spring.core.annotation.AnnotationAttributes;
 import com.zhenchai.spring.core.io.ClassPathResource;
 import com.zhenchai.spring.core.type.classreading.AnnotationMetadataReadingVisitor;
+import com.zhenchai.spring.core.type.classreading.ClassMetadataReadingVisitor;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.asm.ClassReader;
+
 
 /**
  * Created by zhenchai on 2019/2/17 .
@@ -13,10 +15,10 @@ import org.springframework.asm.ClassReader;
  */
 public class ClassReaderTest {
 
-    /*
+
 	@Test
-	public void testGetClasMetaData() throws IOException {
-		ClassPathResource resource = new ClassPathResource("org/litespring/service/v4/PetStoreService.class");
+	public void testGetClasMetaData() throws Exception {
+		ClassPathResource resource = new ClassPathResource("com/zhenchai/spring/service/v4/PetStoreService.class");
 		ClassReader reader = new ClassReader(resource.getInputStream());
 
 		ClassMetadataReadingVisitor visitor = new ClassMetadataReadingVisitor();
@@ -26,10 +28,10 @@ public class ClassReaderTest {
 		Assert.assertFalse(visitor.isAbstract());
 		Assert.assertFalse(visitor.isInterface());
 		Assert.assertFalse(visitor.isFinal());
-		Assert.assertEquals("org.litespring.service.v4.PetStoreService", visitor.getClassName());
+		Assert.assertEquals("com.zhenchai.spring.service.v4.PetStoreService", visitor.getClassName());
 		Assert.assertEquals("java.lang.Object", visitor.getSuperClassName());
 		Assert.assertEquals(0, visitor.getInterfaceNames().length);
-	}*/
+	}
 
     @Test
     public void testGetAnnonation() throws Exception{
