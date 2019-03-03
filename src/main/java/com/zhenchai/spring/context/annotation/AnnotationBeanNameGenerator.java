@@ -6,10 +6,12 @@ import com.zhenchai.spring.beans.factory.support.BeanDefinitionRegistry;
 import com.zhenchai.spring.beans.factory.support.BeanNameGenerator;
 import com.zhenchai.spring.core.annotation.AnnotationAttributes;
 import com.zhenchai.spring.core.type.AnnotationMetadata;
+import com.zhenchai.spring.stereotype.Component;
 import com.zhenchai.spring.util.ClassUtils;
 import com.zhenchai.spring.util.StringUtils;
 
 import java.beans.Introspector;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -41,7 +43,7 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
         String beanName = null;
         for (String type : types) {
             AnnotationAttributes attributes = amd.getAnnotationAttributes(type);
-            if (attributes.get("value") != null) {
+            if (isStereotypeWithNameValue(type, attributes)) {
                 Object value = attributes.get("value");
                 if (value instanceof String) {
                     String strVal = (String) value;
@@ -52,6 +54,12 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
             }
         }
         return beanName;
+    }
+
+
+    protected boolean isStereotypeWithNameValue(String annotationType, Map<String, Object> attributes) {
+        boolean isStereotype = annotationType.equals(Component.class.getName());
+        return (isStereotype && attributes != null && attributes.containsKey("value"));
     }
 
 
