@@ -21,7 +21,7 @@ public class ClassPathBeanDefinitionScannerTest {
 
         DefaultBeanFactory factory = new DefaultBeanFactory();
 
-        String basePackages = "org.litespring.service.v4,org.litespring.dao.v4";
+        String basePackages = "com.zhenchai.spring.service.v4,com.zhenchai.spring.dao.v4";
 
         ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(factory);
         scanner.doScan(basePackages);
@@ -34,7 +34,6 @@ public class ClassPathBeanDefinitionScannerTest {
             Assert.assertTrue(bd instanceof ScannedGenericBeanDefinition);
             ScannedGenericBeanDefinition sbd = (ScannedGenericBeanDefinition)bd;
             AnnotationMetadata amd = sbd.getMetadata();
-
 
             Assert.assertTrue(amd.hasAnnotation(annotation));
             AnnotationAttributes attributes = amd.getAnnotationAttributes(annotation);
