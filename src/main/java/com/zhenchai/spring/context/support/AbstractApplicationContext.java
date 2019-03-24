@@ -1,5 +1,7 @@
 package com.zhenchai.spring.context.support;
 
+import com.zhenchai.spring.beans.factory.annotation.AutowiredAnnotationProcessor;
+import com.zhenchai.spring.beans.factory.config.ConfigurableBeanFactory;
 import com.zhenchai.spring.beans.factory.support.DefaultBeanFactory;
 import com.zhenchai.spring.beans.factory.xml.XmlBeanDefinitionReader;
 import com.zhenchai.spring.context.ApplicationContext;
@@ -21,6 +23,7 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
         Resource resource = this.getResourceByPath(configFile);
         reader.loadBeanDefinitions(resource);
+        registerBeanPostProcessors(factory);
     }
 
 
@@ -37,4 +40,13 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     public void setBeanClassLoader(ClassLoader beanClassLoader) {
         this.beanClassLoader = beanClassLoader;
     }
+
+    protected void registerBeanPostProcessors(ConfigurableBeanFactory beanFactory) {
+
+        AutowiredAnnotationProcessor postProcessor = new AutowiredAnnotationProcessor();
+        postProcessor.setBeanFactory(beanFactory);
+        beanFactory.addBeanPostProcessor(postProcessor);
+
+    }
+
 }

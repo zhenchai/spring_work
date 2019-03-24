@@ -4,13 +4,16 @@ import com.zhenchai.spring.beans.BeanDefinition;
 import com.zhenchai.spring.beans.PropertyValue;
 import com.zhenchai.spring.beans.SimpleTypeConverter;
 import com.zhenchai.spring.beans.factory.BeanCreationException;
+import com.zhenchai.spring.beans.factory.config.BeanPostProcessor;
 import com.zhenchai.spring.beans.factory.config.ConfigurableBeanFactory;
 import com.zhenchai.spring.beans.factory.config.DependencyDescriptor;
+import com.zhenchai.spring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import com.zhenchai.spring.util.ClassUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         implements ConfigurableBeanFactory, BeanDefinitionRegistry {
+
+    private List<BeanPostProcessor> beanPostProcessors = new ArrayList<BeanPostProcessor>();
 
     private Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>(64);
 
@@ -79,6 +84,13 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @param bean
      */
     protected void populateBean(BeanDefinition bd, Object bean){
+
+        for (BeanPostProcessor processor : this.getBeanPostProcessors()) {
+            if (processor instanceof InstantiationAwareBeanPostProcessor) {
+                ((InstantiationAwareBeanPostProcessor)processor).postProcessPropertyValues(bean, bd.getID());
+            }
+        }
+
         List<PropertyValue> pvs = bd.getPropertyValues();
         if (pvs == null || pvs.isEmpty()) {
             return;
@@ -131,6 +143,16 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     @Override
     public ClassLoader getBeanClassLoader() {
         return (this.beanClassLoader != null ? this.beanClassLoader : ClassUtils.getDefaultClassLoader());
+    }
+
+    @Override
+    public void addBeanPostProcessor(BeanPostProcessor postProcessor) {
+        this.beanPostProcessors.add(postProcessor);
+    }
+
+    @Override
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return this.beanPostProcessors;
     }
 
 

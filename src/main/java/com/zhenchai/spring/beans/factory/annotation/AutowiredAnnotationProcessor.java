@@ -1,6 +1,9 @@
 package com.zhenchai.spring.beans.factory.annotation;
 
+import com.zhenchai.spring.beans.BeansException;
+import com.zhenchai.spring.beans.factory.BeanCreationException;
 import com.zhenchai.spring.beans.factory.config.AutowireCapableBeanFactory;
+import com.zhenchai.spring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
@@ -17,7 +20,7 @@ import java.util.Set;
  * Created by zhenchai on 2019/3/24 .
  * Description:
  */
-public class AutowiredAnnotationProcessor {
+public class AutowiredAnnotationProcessor implements InstantiationAwareBeanPostProcessor  {
 
     private AutowireCapableBeanFactory  beanFactory;
     private String requiredParameterName = "required";
@@ -89,5 +92,36 @@ public class AutowiredAnnotationProcessor {
 
     public void setBeanFactory(AutowireCapableBeanFactory beanFactory){
         this.beanFactory = beanFactory;
+    }
+
+    @Override
+    public Object beforeInstantiation(Class<?> beanClass, String beanName) throws BeansException {
+        return null;
+    }
+
+    @Override
+    public boolean afterInstantiation(Object bean, String beanName) throws BeansException {
+        return false;
+    }
+
+    @Override
+    public void postProcessPropertyValues(Object bean, String beanName) throws BeansException {
+        InjectionMetadata metadata = buildAutowiringMetadata(bean.getClass());
+        try {
+            metadata.inject(bean);
+        }
+        catch (Throwable ex) {
+            throw new BeanCreationException(beanName, "Injection of autowired dependencies failed", ex);
+        }
+    }
+
+    @Override
+    public Object beforeInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+
+    @Override
+    public Object afterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
     }
 }
